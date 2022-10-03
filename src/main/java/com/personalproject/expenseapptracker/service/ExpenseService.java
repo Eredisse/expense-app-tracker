@@ -1,13 +1,12 @@
 package com.personalproject.expenseapptracker.service;
 
+import com.personalproject.expenseapptracker.exception.ResourceNotFoundException;
 import com.personalproject.expenseapptracker.model.Expense;
 import com.personalproject.expenseapptracker.repo.ExpenseRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,8 +20,7 @@ public class ExpenseService {
 
     public Expense getExpenseById(Long id) {
         return expenseRepo.findById(id).orElseThrow(
-                () -> new RuntimeException("Expense not found for id")
-        );
+                () -> new ResourceNotFoundException("Expense not found for id"));
     }
 
     public void deleteExpenseById(Long id) {
@@ -43,6 +41,5 @@ public class ExpenseService {
 
         return expenseRepo.save(existingExpense);
     }
-
 
 }
