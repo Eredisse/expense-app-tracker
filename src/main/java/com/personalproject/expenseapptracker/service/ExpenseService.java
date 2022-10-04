@@ -27,7 +27,8 @@ public class ExpenseService {
     }
 
     public void deleteExpenseById(Long id) {
-        expenseRepo.deleteById(id);
+        Expense expense = getExpenseById(id);
+        expenseRepo.delete(expense);
     }
 
     public Expense saveExpense(Expense expense) {
