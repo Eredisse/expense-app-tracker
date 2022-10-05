@@ -3,7 +3,6 @@ package com.personalproject.expenseapptracker.config;
 import com.personalproject.expenseapptracker.service.CustomUserDetailsService;
 import com.personalproject.expenseapptracker.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +20,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
