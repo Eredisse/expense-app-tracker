@@ -7,13 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public interface ExpenseRepo extends JpaRepository<Expense,Long> {
 
-    Page<Expense> findByCategory(String category, Pageable page);
+    Page<Expense> findByUserIdAndCategory(Long userId, String category, Pageable page);
 
-    Page<Expense> findByNameContaining(String keyword, Pageable page);
+    Page<Expense> findByUserIdAndNameContaining(Long userId, String keyword, Pageable page);
 
-    Page<Expense> findByDateBetween(Date startDate, Date endDate, Pageable page);
+    Page<Expense> findByUserIdAndDateBetween(Long userId, Date startDate, Date endDate, Pageable page);
+
+    Page <Expense> findByUserId(Long userId, Pageable page);
+
+    Optional<Expense> findByUserIdAndId(Long userId, Long id);
 }

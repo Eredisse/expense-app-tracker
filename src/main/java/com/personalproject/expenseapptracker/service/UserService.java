@@ -7,6 +7,9 @@ import com.personalproject.expenseapptracker.model.UserModel;
 import com.personalproject.expenseapptracker.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,14 +32,15 @@ public class UserService {
         return userRepo.save(newUser);
     }
 
-    public User getUser(Long id) {
-        return userRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User not found for id "+ id));
+    public User getUser() {
+        Long userId = getLoggedInUser().getId();
+        return userRepo.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found for id "+ userId));
     }
 
 
-    public User updateUser(UserModel user, Long id) {
-        User existingUser = getUser(id);
+    public User updateUser(UserModel user) {
+        User existingUser = getUser();
         existingUser.setName(user.getName() != null ? user.getName() : existingUser.getName());
         existingUser.setEmail(user.getEmail() != null ? user.getEmail() : existingUser.getEmail());
         existingUser.setPassword(user.getPassword() != null ? passwordEncoder.encode(user.getPassword()) : existingUser.getPassword());
@@ -45,8 +49,15 @@ public class UserService {
         return userRepo.save(existingUser);
     }
 
-    public void delete(Long id) {
-        User user = getUser(id);
+    public void delete() {
+        User user = getUser();
         userRepo.delete(user);
+    }
+
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return userRepo.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException("User not found for email "+ email));
     }
 }

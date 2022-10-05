@@ -18,19 +18,19 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return new ResponseEntity<User>(userService.getUser(id), HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<User> getUser() {
+        return new ResponseEntity<User>(userService.getUser(), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody UserModel user, @PathVariable Long id) {
-        return new ResponseEntity<User>(userService.updateUser(user,id),HttpStatus.OK);
+    @PutMapping()
+    public ResponseEntity<User> updateUser(@RequestBody UserModel user) {
+        return new ResponseEntity<User>(userService.updateUser(user),HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable Long id) {
-        userService.delete(id);
+    @DeleteMapping()
+    public ResponseEntity<HttpStatus> delete() {
+        userService.delete();
         return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
     }
 

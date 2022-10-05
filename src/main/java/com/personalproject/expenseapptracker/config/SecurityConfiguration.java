@@ -8,15 +8,22 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfiguration {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Bean
+    public JWTRequestFilter authenticationJwtTokenFilter() {
+        return new JWTRequestFilter();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -36,8 +43,10 @@ public class SecurityConfiguration {
                 .antMatchers("/login", "/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic(Customizer.withDefaults())
-                .userDetailsService(userDetailsService);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.httpBasic();
         return http.build();
     }
 } 
